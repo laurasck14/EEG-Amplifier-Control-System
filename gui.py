@@ -127,10 +127,8 @@ class EEGAmplifier(GuiBaseClass):
     #     file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
     #     if file_path:
     #         data = [amplifier.to_dict() for amplifier in self.amplifiers]
-
     #     with open(file_path, 'w') as file:
     #         json.dump(data, file, indent=4)
-
 
     def list_all(self): # return all currently available amplifiers
         amplifiers = self.control_system.list_amplifiers()
@@ -157,6 +155,14 @@ class EEGAmplifier(GuiBaseClass):
                 next_maintenance_date = datetime.strptime(next_maintenance, "%d-%m-%Y")
             except ValueError:
                 messagebox.showerror("Invalid Date", "Date format should be YYYY-MM-DD")
+                return
+            
+            # Check sampling rate and gain 
+            if sampling_rate not in [256, 512, 1024]:
+                messagebox.showerror("Invalid Sampling Rate", "Sampling rate must be 256, 512, or 1024.")
+                return
+            if gain < 1 or gain > 100:
+                messagebox.showerror("Invalid Gain", "Gain must be between 1 and 100.")
                 return
 
             # Create, add and include amplifier in list
