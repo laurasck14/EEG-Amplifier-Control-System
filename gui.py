@@ -9,6 +9,7 @@ from GuiBaseClass import GuiBaseClass
 from tkinter import simpledialog, messagebox
 from Amplifier import EEGAmplifierControlSystem, Amplifier, Sensor
 from datetime import datetime
+from two_input import create_search_dialog
 
 
 class EEGAmplifier(GuiBaseClass):
@@ -25,8 +26,8 @@ class EEGAmplifier(GuiBaseClass):
         mf = self.getFrame()
         self.pw = ttk.PanedWindow(mf, orient='horizontal')
 
-        self.lb_files = tk.Listbox(self.pw,exportselection=True)
-        self.lb_opt = tk.Listbox(self.pw,exportselection=False)
+        self.lb_files = tk.Listbox(self.pw, exportselection=True)
+        self.lb_opt = tk.Listbox(self.pw, exportselection=False)
         self.pw.add(self.lb_files)
         self.lb_opt.insert(1,'Information')
         self.lb_opt.insert(2,'Remove')
@@ -75,7 +76,6 @@ class EEGAmplifier(GuiBaseClass):
         if not amplifiers:
             self.lb_files.insert('1.0', "No amplifiers registered in the system.")
 
-
     def add_new_amplifier(self):
         """Prompt user for amplifier details and add it to the control system."""
         try:
@@ -102,19 +102,19 @@ class EEGAmplifier(GuiBaseClass):
             messagebox.showerror("Error", str(e))
     
     def search_for_amplifier(self):
-        
-        search_criteria = simpledialog.askstring("Search Criterion")
-        
-        if search_criteria:
-            # Assuming control_system has a method to search by various fields
-            results = self.control_system.search_amplifier(search_criteria)
-            self.lb_files.delete(0, tk.END)  # Clear current listbox
+        result = create_search_dialog(self.root)
+        print(f'Selected Option: {result}')
 
-            for amplifier in results:
-                self.lb_files.insert(tk.END, amplifier.serial_number)  # Add found amplifiers to the list
+        # if search_criteria:
+        #     # Assuming control_system has a method to search by various fields
+        #     results = self.control_system.search_amplifier(search_criteria)
+        #     self.lb_files.delete(0, tk.END)  # Clear current listbox
 
-            #if not results:
-                #self.message("No amplifiers found matching the criteria.")
+        #     for amplifier in results:
+        #         self.lb_files.insert(tk.END, amplifier.serial_number)  # Add found amplifiers to the list
+
+        #     #if not results:
+        #         #self.message("No amplifiers found matching the criteria.")
         
     
 def main (args):
