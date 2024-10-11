@@ -46,7 +46,26 @@ class GuiBaseClass():
           sys.exit(0)
           
   def About(self):
-      print("print GuiBaseClass")
+    text_window = tk.Toplevel()
+    text_window.title("Help page")
+
+    text = """USAGE: python3 gui.py coded by Laura Santa Cruz
+      EEG Amplifier Control system GUI allows to modify, search, delete, add amplifiers.
+
+      Left box: list of the currently registered amplifiers
+      Middle menu: optional operations to perform to a selected amplifier
+        - must select an amplifier AND double click on the option
+      Right box: output of the results"""
+
+    text_window.geometry("1000x250")
+    # Add a Text widget to the window to display the text content
+    text_display = tk.Text(text_window, wrap='word')
+    text_display.insert(tk.END, text)  # Insert the text content
+    text_display.config(state='disabled')  # Make the Text widget read-only
+    text_display.pack(expand=True, fill='both')
+    
+      
+
 if __name__ == '__main__':
     root=tk.Tk()
     bapp = GuiBaseClass(root) 

@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 ''' Laura Santa Cruz Kaster
-include functionalities....
+Amplifier.py contains the classes for
+Amplifier, with:
+    - add/remove sensor
+    - set gain/sampling rate/power
+
+EEGAmplifierControlSystem, with the functionalities for the amplifier:
+    - register, remove, list, search called from the GUI at gui.py
 '''
-import sys, os, re
 from datetime import datetime
 
 class Sensor:

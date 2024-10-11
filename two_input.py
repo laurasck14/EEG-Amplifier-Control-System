@@ -1,5 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
+'''
+Custom combobox to ask for two inputs from the user.
+Consists of:
+    - drop-down menu to select an option from
+    - box to enter a string/number
+'''
 
 def create_search_dialog(master):
     # Create a new top-level window for the search dialog

@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 ''' Laura Santa Cruz Kaster
-usage: python3 gui.py
+USAGE: python3 gui.py
+EEG Amplifier Control system GUI allows to modify, search, delete, add amplifiers.
+
+Left box: list of the currently registered amplifiers
+Middle menu: optional operations to perform to a selected amplifier
+    - must select an amplifier AND double click on the option
+Right box: output of the results
 '''
+
 import sys, os, re
 import tkinter as tk
 import tkinter.ttk as ttk
@@ -15,7 +22,6 @@ from two_input import create_search_dialog
 class EEGAmplifier(GuiBaseClass):
     def __init__(self, root, args):
         super().__init__(root)
-
         self.control_system = EEGAmplifierControlSystem()
 
         mnu=self.getMenu('Amplifier')
@@ -29,12 +35,11 @@ class EEGAmplifier(GuiBaseClass):
         self.lb_files = tk.Listbox(self.pw, exportselection=True)
         self.lb_opt = tk.Listbox(self.pw, exportselection=False)
         self.pw.add(self.lb_files)
-        self.lb_opt.insert(1,'Information')
+        self.lb_opt.insert(1,'Information') #middle menu options
         self.lb_opt.insert(2,'Remove')
         self.lb_opt.insert(3,'Set gain')
         self.lb_opt.insert(4,'Set sample rate')
         self.lb_opt.insert(5,'Set power')
-
 
         self.pw.add(self.lb_opt)
 
@@ -42,7 +47,7 @@ class EEGAmplifier(GuiBaseClass):
         self.pw.add(self.text)
         self.pw.pack(side='top', fill='both', expand=True)
 
-        # MESSAGES!!!!
+        # functions from the middle menu, user must double click
         def selection(event):
             if not self.lb_files.curselection():
                 self.text.insert(tk.END, "Please select an amplifier and double click on the option.\n")
@@ -103,7 +108,7 @@ class EEGAmplifier(GuiBaseClass):
 
         self.lb_opt.bind('<Double-1>', selection)
 
-    def list_all(self):
+    def list_all(self): # return all currently available amplifiers
         amplifiers = self.control_system.list_amplifiers()
         self.text.delete("1.0", tk.END)
         self.lb_files.delete(0, tk.END) #clear
@@ -114,7 +119,7 @@ class EEGAmplifier(GuiBaseClass):
         if not amplifiers:
             self.text.insert(tk.END, "No amplifiers registered in the system.\n")
 
-    def add_new_amplifier(self):
+    def add_new_amplifier(self): #register new amplifier
         """Prompt user for amplifier details and add it to the control system."""
         try:
             serial_number = simpledialog.askstring("Input", "Enter Serial Number:")
@@ -141,9 +146,8 @@ class EEGAmplifier(GuiBaseClass):
         except Exception as e:
             messagebox.showerror("Error", str(e))
     
-    def search_for_amplifier(self):
-        result = create_search_dialog(self.root)
-
+    def search_for_amplifier(self): #search for amplifier
+        result = create_search_dialog(self.root) #open custom window to ask for input
         if result['option'] == 'Manufacturer':
             sol = self.control_system.search_amplifier(manufacturer=result['string'])
         elif result['option'] == 'Serial number':
@@ -153,17 +157,14 @@ class EEGAmplifier(GuiBaseClass):
 
         self.lb_files.delete(0, tk.END) #clear
         self.text.delete("1.0", tk.END)
-
         for amplifiers in sol:
-                print(amplifiers)
                 self.lb_files.insert(tk.END, amplifiers.serial_number)  # Add found amplifiers to the list 
-
         if not sol:
             self.text.insert(tk.END, '\nNo matches found\n')
 
 def main (args): #generate main window
     root=tk.Tk()
-    root.geometry("800x600")
+    root.geometry("800x400")
     root.title("EEG Amplifier Control System")
     bapp = EEGAmplifier(root, args) 
     bapp.mainLoop()
