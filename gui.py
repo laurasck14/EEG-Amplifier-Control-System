@@ -31,6 +31,11 @@ class EEGAmplifier(GuiBaseClass):
         self.pw.add(self.lb_files)
         self.lb_opt.insert(1,'Information')
         self.lb_opt.insert(2,'Remove')
+        self.lb_opt.insert(3,'Set gain')
+        self.lb_opt.insert(4,'Set sample rate')
+        self.lb_opt.insert(5,'Set power')
+
+
         self.pw.add(self.lb_opt)
 
         self.text = tk.Text(self.pw, wrap='word',undo=True)
@@ -40,7 +45,7 @@ class EEGAmplifier(GuiBaseClass):
         # MESSAGES!!!!
         def selection(event):
             if not self.lb_files.curselection():
-                self.message("Please select an amplifier")
+                self.text.insert(tk.END, "Please select an amplifier and double click on the option.\n")
                 return
             
             serial_number = self.lb_files.get(self.lb_files.curselection())
@@ -63,18 +68,51 @@ class EEGAmplifier(GuiBaseClass):
                 # Remove the selected amplifier
                 self.control_system.remove_amplifier(serial_number)
                 self.lb_files.delete(self.lb_files.curselection())
+                self.text.insert(tk.END, f'\nAmplifier {serial_number} deleted\n')
+
+            elif 'Set gain' in opt:
+                new_gain = simpledialog.askinteger("Modify Gain", "Select an amplifier and enter new gain value (1-100):", minvalue=1, maxvalue=100)
+                if new_gain is not None:
+                    try:
+                    # Set the gain for the selected amplifier
+                        amplifier.set_gain(new_gain)
+                        self.text.delete('1.0', tk.END)
+                        self.text.insert(tk.END, 'Gain modified\n')
+
+                    except ValueError as e:
+                        self.text.delete('1.0', tk.END)
+                        self.text.insert(tk.END, e)
+           
+            elif 'Set sample rate' in opt:
+                new_rate = simpledialog.askinteger("Modify sampling rate", "Select an amplifier and enter new sampling rate [256, 512, 1024]:")
+                if new_rate is not None:
+                    try:
+                    # Set the sample rate for the selected amplifier
+                        amplifier.set_sampling_rate(new_rate)
+                        self.text.delete('1.0', tk.END)
+                        self.text.insert(tk.END, '\nSample rate modified\n')
+
+                    except ValueError as e:
+                        self.text.insert(tk.END, e)
+
+
+            elif 'Set power' in opt:
+                amplifier.toggle_power()
+                self.text.delete()
+                self.text.insert(tk.END, '\nPower modified\n')
 
         self.lb_opt.bind('<Double-1>', selection)
 
     def list_all(self):
         amplifiers = self.control_system.list_amplifiers()
+        self.text.delete("1.0", tk.END)
         self.lb_files.delete(0, tk.END) #clear
 
         for amplifier in amplifiers:
             self.lb_files.insert(tk.END, amplifier.serial_number)  # Add all amplifiers' serial numbers to the list
 
         if not amplifiers:
-            self.lb_files.insert('1.0', "No amplifiers registered in the system.")
+            self.text.insert(tk.END, "No amplifiers registered in the system.\n")
 
     def add_new_amplifier(self):
         """Prompt user for amplifier details and add it to the control system."""
@@ -97,6 +135,8 @@ class EEGAmplifier(GuiBaseClass):
                                 next_maintenance=next_maintenance_date, sampling_rate=sampling_rate, gain=gain)
             self.control_system.register_amplifier(amplifier)
             self.lb_files.insert(tk.END, serial_number)
+            self.text.delete("1.0", tk.END)
+            self.text.insert(tk.END, '\nNew amplifier added.\n')
 
         except Exception as e:
             messagebox.showerror("Error", str(e))
@@ -111,13 +151,17 @@ class EEGAmplifier(GuiBaseClass):
         elif result['option'] == 'Model':
             sol = self.control_system.search_amplifier(model=result['string'])
 
-        self.lb_files.delete(tk.END)
-        for amplifiers in sol:
-                self.lb_files.insert(tk.END, amplifiers.serial_number)  # Add found amplifiers to the list      
-        if not sol:
-            self.lb_files.insert(tk.END, 'No matches found')
+        self.lb_files.delete(0, tk.END) #clear
+        self.text.delete("1.0", tk.END)
 
-def main (args):
+        for amplifiers in sol:
+                print(amplifiers)
+                self.lb_files.insert(tk.END, amplifiers.serial_number)  # Add found amplifiers to the list 
+
+        if not sol:
+            self.text.insert(tk.END, '\nNo matches found\n')
+
+def main (args): #generate main window
     root=tk.Tk()
     root.geometry("800x600")
     root.title("EEG Amplifier Control System")
