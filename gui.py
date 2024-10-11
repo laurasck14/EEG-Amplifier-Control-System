@@ -26,7 +26,7 @@ class EEGAmplifier(GuiBaseClass):
         self.control_system = EEGAmplifierControlSystem()
 
         mnu=self.getMenu('Import/export data')
-        mnu.add_command(label='Save amplifiers', command=self.save_to_file)
+        #mnu.add_command(label='Save amplifiers', command=self.save_to_file)
 
         mnu=self.getMenu('Amplifier')
         mnu.add_command(label='List all', command=self.list_all)
