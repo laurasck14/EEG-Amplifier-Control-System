@@ -6,7 +6,6 @@ import sys, os, re
 import tkinter as tk
 import tkinter.ttk as ttk
 from GuiBaseClass import GuiBaseClass
-import tkinter.filedialog as filedialog
 from tkinter import simpledialog, messagebox
 from Amplifier import EEGAmplifierControlSystem, Amplifier, Sensor
 from datetime import datetime
@@ -19,8 +18,9 @@ class EEGAmplifier(GuiBaseClass):
         self.control_system = EEGAmplifierControlSystem()
 
         mnu=self.getMenu('Amplifier')
+        mnu.add_command(label='List all', command=self.list_all)
         mnu.add_command(label='Add new amplifier', command=self.add_new_amplifier)
-        #mnu.add_command(label='Remove amplifier', command=self.remove_amplifier)
+        mnu.add_command(label='Search amplifier', command=self.search_for_amplifier)
 
         mf = self.getFrame()
         self.pw = ttk.PanedWindow(mf, orient='horizontal')
@@ -36,32 +36,7 @@ class EEGAmplifier(GuiBaseClass):
         self.pw.add(self.text)
         self.pw.pack(side='top', fill='both', expand=True)
 
-    def add_new_amplifier(self):
-        """Prompt user for amplifier details and add it to the control system."""
-        try:
-            serial_number = simpledialog.askstring("Input", "Enter Serial Number:")
-            model = simpledialog.askstring("Input", "Enter Model:")
-            manufacturer = simpledialog.askstring("Input", "Enter Manufacturer:")
-            next_maintenance = simpledialog.askstring("Input", "Enter Next Maintenance Date (DD-MM-YYYY):")
-            sampling_rate = simpledialog.askinteger("Input", "Enter Sampling Rate (256, 512, 1024):")
-            gain = simpledialog.askinteger("Input", "Enter Gain (1-100):")
-
-            try:
-                next_maintenance_date = datetime.strptime(next_maintenance, "%d-%m-%Y")
-            except ValueError:
-                messagebox.showerror("Invalid Date", "Date format should be YYYY-MM-DD")
-                return
-
-            # Create, add and include amplifier in list
-            amplifier = Amplifier(serial_number=serial_number, model=model, manufacturer=manufacturer,
-                                next_maintenance=next_maintenance_date, sampling_rate=sampling_rate, gain=gain)
-            self.control_system.register_amplifier(amplifier)
-            self.lb_files.insert(tk.END, serial_number)
-
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
-
-        # Double click cursor clicking --->>> MESSAGESS
+        # MESSAGES!!!!
         def selection(event):
             if not self.lb_files.curselection():
                 self.message("Please select an amplifier")
@@ -89,6 +64,58 @@ class EEGAmplifier(GuiBaseClass):
                 self.lb_files.delete(self.lb_files.curselection())
 
         self.lb_opt.bind('<Double-1>', selection)
+
+    def list_all(self):
+        amplifiers = self.control_system.list_amplifiers()
+        self.lb_files.delete(0, tk.END) #clear
+
+        for amplifier in amplifiers:
+            self.lb_files.insert(tk.END, amplifier.serial_number)  # Add all amplifiers' serial numbers to the list
+
+        if not amplifiers:
+            self.lb_files.insert('1.0', "No amplifiers registered in the system.")
+
+
+    def add_new_amplifier(self):
+        """Prompt user for amplifier details and add it to the control system."""
+        try:
+            serial_number = simpledialog.askstring("Input", "Enter Serial Number:")
+            model = simpledialog.askstring("Input", "Enter Model:")
+            manufacturer = simpledialog.askstring("Input", "Enter Manufacturer:")
+            next_maintenance = simpledialog.askstring("Input", "Enter Next Maintenance Date (DD-MM-YYYY):")
+            sampling_rate = simpledialog.askinteger("Input", "Enter Sampling Rate (256, 512, 1024):")
+            gain = simpledialog.askinteger("Input", "Enter Gain (1-100):")
+
+            try:
+                next_maintenance_date = datetime.strptime(next_maintenance, "%d-%m-%Y")
+            except ValueError:
+                messagebox.showerror("Invalid Date", "Date format should be YYYY-MM-DD")
+                return
+
+            # Create, add and include amplifier in list
+            amplifier = Amplifier(serial_number=serial_number, model=model, manufacturer=manufacturer,
+                                next_maintenance=next_maintenance_date, sampling_rate=sampling_rate, gain=gain)
+            self.control_system.register_amplifier(amplifier)
+            self.lb_files.insert(tk.END, serial_number)
+
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+    
+    def search_for_amplifier(self):
+        
+        search_criteria = simpledialog.askstring("Search Criterion")
+        
+        if search_criteria:
+            # Assuming control_system has a method to search by various fields
+            results = self.control_system.search_amplifier(search_criteria)
+            self.lb_files.delete(0, tk.END)  # Clear current listbox
+
+            for amplifier in results:
+                self.lb_files.insert(tk.END, amplifier.serial_number)  # Add found amplifiers to the list
+
+            #if not results:
+                #self.message("No amplifiers found matching the criteria.")
+        
     
 def main (args):
     root=tk.Tk()
