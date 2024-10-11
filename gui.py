@@ -8,8 +8,7 @@ Middle menu: optional operations to perform to a selected amplifier
     - must select an amplifier AND double click on the option
 Right box: output of the results
 '''
-
-import sys, os, re
+import sys, json
 import tkinter as tk
 import tkinter.ttk as ttk
 from GuiBaseClass import GuiBaseClass
@@ -17,15 +16,13 @@ from tkinter import simpledialog, messagebox, filedialog
 from Amplifier import EEGAmplifierControlSystem, Amplifier, Sensor
 from datetime import datetime
 from two_input import create_search_dialog
-import json
-
 
 class EEGAmplifier(GuiBaseClass):
     def __init__(self, root, args):
         super().__init__(root)
         self.control_system = EEGAmplifierControlSystem()
 
-        mnu=self.getMenu('Import/export data')
+        mnu=self.getMenu('Import/export data') # not implemented
         #mnu.add_command(label='Save amplifiers', command=self.save_to_file)
 
         mnu=self.getMenu('Amplifier')
@@ -122,6 +119,7 @@ class EEGAmplifier(GuiBaseClass):
 
         self.lb_opt.bind('<Double-1>', selection)
     
+    # Functions of the top menu
     # Start of the implementation to save amplifiers created into a file, not working
     # def save_to_file(self):
     #     file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])

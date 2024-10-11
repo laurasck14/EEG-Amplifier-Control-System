@@ -66,8 +66,6 @@ class GuiBaseClass():
     text_display.config(state='disabled')  # Make the Text widget read-only
     text_display.pack(expand=True, fill='both')
     
-      
-
 if __name__ == '__main__':
     root=tk.Tk()
     bapp = GuiBaseClass(root) 

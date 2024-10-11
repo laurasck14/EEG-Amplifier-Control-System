@@ -71,7 +71,7 @@ class Amplifier:
     
     def to_dict(self): #export amplifier information
         """
-        Convert amplifier data to a dictionary for easy JSON serialization.
+        Convert amplifier data to a dictionary to export data.
         """
         return {
             'serial_number': self.serial_number,

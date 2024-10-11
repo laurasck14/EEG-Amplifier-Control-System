@@ -21,8 +21,6 @@ def create_search_dialog(master):
     # Adding combobox drop-down list
     search_opt['values'] = ('Serial number', 'Model', 'Manufacturer')
     search_opt.grid(column=1, row=5)
-
-    # Label for input field
     ttk.Label(search_window, text="Enter search string:", font=("Times New Roman", 10)).grid(column=0, row=2, padx=10, pady=10)
 
     # Entry field for inputting the search string
@@ -37,7 +35,6 @@ def create_search_dialog(master):
 
     search_button = ttk.Button(search_window, text="Search", command=on_search)
     search_button.grid(column=1, row=10, pady=20)
-
     search_window.wait_window(search_window)
 
     return result # Return the ComboBox and Entry for use in the main application
