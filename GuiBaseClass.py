@@ -13,7 +13,7 @@ class GuiBaseClass():
       self.menubar.add_cascade(menu=menu_file,label='File',underline=0)
       menu_file.add_separator()
       menu_file.add_command(label='Exit', 
-      command=self.Exit,underline=1)       
+          command=self.Exit,underline=1)           
       menu_help = tk.Menu(self.menubar)
       self.menubar.add_cascade(menu=menu_help,label='Help',underline=0)
       menu_help.add_command(label='About', command=self.About,underline=0)       
@@ -27,8 +27,10 @@ class GuiBaseClass():
   # public functions
   def mainLoop(self):
       self.root.mainloop()
+
   def getFrame(self):
       return(self.frame)  
+  
   def getMenu(self,entry):
       if entry in self.menu:
         return (self.menu[entry])

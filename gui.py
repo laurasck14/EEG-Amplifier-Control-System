@@ -13,16 +13,20 @@ import sys, os, re
 import tkinter as tk
 import tkinter.ttk as ttk
 from GuiBaseClass import GuiBaseClass
-from tkinter import simpledialog, messagebox
+from tkinter import simpledialog, messagebox, filedialog
 from Amplifier import EEGAmplifierControlSystem, Amplifier, Sensor
 from datetime import datetime
 from two_input import create_search_dialog
+import json
 
 
 class EEGAmplifier(GuiBaseClass):
     def __init__(self, root, args):
         super().__init__(root)
         self.control_system = EEGAmplifierControlSystem()
+
+        mnu=self.getMenu('Import/export data')
+        mnu.add_command(label='Save amplifiers', command=self.save_to_file)
 
         mnu=self.getMenu('Amplifier')
         mnu.add_command(label='List all', command=self.list_all)
@@ -117,6 +121,16 @@ class EEGAmplifier(GuiBaseClass):
                     self.text.insert(tk.END, f"\nSensor '{sensor_tag}' added to amplifier {amplifier.serial_number}.\n")
 
         self.lb_opt.bind('<Double-1>', selection)
+    
+    # Start of the implementation to save amplifiers created into a file, not working
+    # def save_to_file(self):
+    #     file_path = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+    #     if file_path:
+    #         data = [amplifier.to_dict() for amplifier in self.amplifiers]
+
+    #     with open(file_path, 'w') as file:
+    #         json.dump(data, file, indent=4)
+
 
     def list_all(self): # return all currently available amplifiers
         amplifiers = self.control_system.list_amplifiers()

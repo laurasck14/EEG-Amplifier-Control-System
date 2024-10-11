@@ -68,6 +68,21 @@ class Amplifier:
     def toggle_power(self):
         """Toggle the power state (on/off) of the amplifier."""
         self.is_on = not self.is_on
+    
+    def to_dict(self): #export amplifier information
+        """
+        Convert amplifier data to a dictionary for easy JSON serialization.
+        """
+        return {
+            'serial_number': self.serial_number,
+            'model': self.model,
+            'manufacturer': self.manufacturer,
+            'next_maintenance': self.next_maintenance.strftime('%Y-%m-%d'),
+            'sampling_rate': self.sampling_rate,
+            'gain': self.gain,
+            'is_on': self.is_on,
+            'sensors': self.sensors
+        }
 
     def __repr__(self):
         return f"Amplifier(serial_number={self.serial_number}, model={self.model}, manufacturer={self.manufacturer}, sampling_rate={self.sampling_rate}Hz, gain={self.gain}, is_on={self.is_on}, sensors={self.sensors})"
