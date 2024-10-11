@@ -41,13 +41,13 @@ class EEGAmplifier(GuiBaseClass):
             serial_number = simpledialog.askstring("Input", "Enter Serial Number:")
             model = simpledialog.askstring("Input", "Enter Model:")
             manufacturer = simpledialog.askstring("Input", "Enter Manufacturer:")
-            next_maintenance = simpledialog.askstring("Input", "Enter Next Maintenance Date (YYYY-MM-DD):")
+            next_maintenance = simpledialog.askstring("Input", "Enter Next Maintenance Date (DD-MM-YYYY):")
             sampling_rate = simpledialog.askinteger("Input", "Enter Sampling Rate (256, 512, 1024):")
             gain = simpledialog.askinteger("Input", "Enter Gain (1-100):")
 
             # Validate date input
             try:
-                next_maintenance_date = datetime.strptime(next_maintenance, "%Y-%m-%d")
+                next_maintenance_date = datetime.strptime(next_maintenance, "%d-%m-%Y")
             except ValueError:
                 messagebox.showerror("Invalid Date", "Date format should be YYYY-MM-DD")
                 return
