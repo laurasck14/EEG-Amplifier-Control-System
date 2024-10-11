@@ -1,7 +1,3 @@
-  
-import tkinter as tk
-from tkinter import ttk
-  
 import tkinter as tk
 from tkinter import ttk
 
@@ -17,7 +13,7 @@ def create_search_dialog(master):
     search_opt = ttk.Combobox(search_window, width=27, textvariable=n)
 
     # Adding combobox drop-down list
-    search_opt['values'] = ('Serial number', 'Model string', 'Manufacturer')
+    search_opt['values'] = ('Serial number', 'Model', 'Manufacturer')
     search_opt.grid(column=1, row=5)
 
     # Label for input field
@@ -26,7 +22,7 @@ def create_search_dialog(master):
     # Entry field for inputting the search string
     entry = ttk.Entry(search_window, width=30)
     entry.grid(column=1, row=2, padx=10, pady=10)
-
+    
     result = {"option": None, "string": None}
     def on_search():
         result["option"] = search_opt.get()
@@ -35,5 +31,7 @@ def create_search_dialog(master):
 
     search_button = ttk.Button(search_window, text="Search", command=on_search)
     search_button.grid(column=1, row=10, pady=20)
+
+    search_window.wait_window(search_window)
 
     return result # Return the ComboBox and Entry for use in the main application

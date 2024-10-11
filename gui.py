@@ -103,20 +103,20 @@ class EEGAmplifier(GuiBaseClass):
     
     def search_for_amplifier(self):
         result = create_search_dialog(self.root)
-        print(f'Selected Option: {result}')
 
-        # if search_criteria:
-        #     # Assuming control_system has a method to search by various fields
-        #     results = self.control_system.search_amplifier(search_criteria)
-        #     self.lb_files.delete(0, tk.END)  # Clear current listbox
+        if result['option'] == 'Manufacturer':
+            sol = self.control_system.search_amplifier(manufacturer=result['string'])
+        elif result['option'] == 'Serial number':
+            sol = self.control_system.search_amplifier(serial_number=result['string'])
+        elif result['option'] == 'Model':
+            sol = self.control_system.search_amplifier(model=result['string'])
 
-        #     for amplifier in results:
-        #         self.lb_files.insert(tk.END, amplifier.serial_number)  # Add found amplifiers to the list
+        self.lb_files.delete(tk.END)
+        for amplifiers in sol:
+                self.lb_files.insert(tk.END, amplifiers.serial_number)  # Add found amplifiers to the list      
+        if not sol:
+            self.lb_files.insert(tk.END, 'No matches found')
 
-        #     #if not results:
-        #         #self.message("No amplifiers found matching the criteria.")
-        
-    
 def main (args):
     root=tk.Tk()
     root.geometry("800x600")
