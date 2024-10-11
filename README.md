@@ -1,5 +1,7 @@
 # EEG-Amplifier-Control-System
-EEG Amplifier Control System consists of a GUI to manage amplifiers. It allows the user to create a new one, search based on serial number, model or manufacturer. Gain, sample rate and power can also be modified.
+EEG Amplifier Control System consists of a GUI to manage amplifiers. It allows the user to create a new one, delete a selected one and search based on serial number, model or manufacturer. Gain, sample rate and power can also be modified.
+
+The implementation for exporting the current data into a file was started but not finished.
 
 ## Includes:
   - Amplifier.py: where the class for the amplifier and sensor is
