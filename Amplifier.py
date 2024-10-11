@@ -108,31 +108,3 @@ class EEGAmplifierControlSystem:
 
 if __name__ == "__main__":
     control_system = EEGAmplifierControlSystem()
-
-    # Create a new amplifier
-    amp1 = Amplifier(serial_number="12345", model="AmpX", manufacturer="NeuroTech", next_maintenance=datetime(2025, 10, 1), sampling_rate=512, gain=50)
-    control_system.register_amplifier(amp1)
-
-    # Add sensors to the amplifier
-    sensor1 = Sensor("frontal")
-    sensor2 = Sensor("occipital")
-    amp1.add_sensor(sensor1)
-    amp1.add_sensor(sensor2)
-
-    # Adjust the gain and sampling rate
-    amp1.set_gain(75)
-    amp1.set_sampling_rate(1024)
-
-    # Power on the amplifier
-    amp1.toggle_power()
-
-    # List all amplifiers
-    print(f"Hola: {control_system.list_amplifiers()}")
-
-    # Search for an amplifier by model
-    search_results = control_system.search_amplifier(model="AmpX")
-    print(f"Search: {search_results}")
-
-    # Remove an amplifier by serial number
-    control_system.remove_amplifier("12345")
-    print(control_system.list_amplifiers())
