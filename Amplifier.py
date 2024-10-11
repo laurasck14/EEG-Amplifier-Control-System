@@ -45,10 +45,6 @@ class Amplifier:
         """Associate a sensor with the amplifier."""
         self.sensors.append(sensor)
 
-    def remove_sensor(self, sensor: Sensor):
-        """Remove a sensor from the amplifier."""
-        self.sensors.remove(sensor)
-
     def set_gain(self, gain: int):
         """
         Adjust the gain level of the amplifier.

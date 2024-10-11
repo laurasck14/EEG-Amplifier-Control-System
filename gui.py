@@ -40,6 +40,7 @@ class EEGAmplifier(GuiBaseClass):
         self.lb_opt.insert(3,'Set gain')
         self.lb_opt.insert(4,'Set sample rate')
         self.lb_opt.insert(5,'Set power')
+        self.lb_opt.insert(6,'Add sensor')
 
         self.pw.add(self.lb_opt)
 
@@ -82,7 +83,7 @@ class EEGAmplifier(GuiBaseClass):
                     # Set the gain for the selected amplifier
                         amplifier.set_gain(new_gain)
                         self.text.delete('1.0', tk.END)
-                        self.text.insert(tk.END, 'Gain modified\n')
+                        self.text.insert(tk.END, f'\nGain modified for amplifier {amplifier.serial_number}.\n')
 
                     except ValueError as e:
                         self.text.delete('1.0', tk.END)
@@ -95,7 +96,7 @@ class EEGAmplifier(GuiBaseClass):
                     # Set the sample rate for the selected amplifier
                         amplifier.set_sampling_rate(new_rate)
                         self.text.delete('1.0', tk.END)
-                        self.text.insert(tk.END, '\nSample rate modified\n')
+                        self.text.insert(tk.END, f'\nSample rate modified for amplifier {amplifier.serial_number}\n')
 
                     except ValueError as e:
                         self.text.insert(tk.END, e)
@@ -103,8 +104,17 @@ class EEGAmplifier(GuiBaseClass):
 
             elif 'Set power' in opt:
                 amplifier.toggle_power()
-                self.text.delete()
-                self.text.insert(tk.END, '\nPower modified\n')
+                self.text.delete('1.0', tk.END)                
+                self.text.insert(tk.END, f'\nPower modified for {amplifier.serial_number}.\n')
+
+            elif 'Add sensor' in opt:
+                # Prompt the user to enter sensor tag
+                sensor_tag = simpledialog.askstring("Add Sensor", "Enter sensor tag (e.g., 'frontal', 'occipital'):")
+                if sensor_tag:
+                    new_sensor = Sensor(tag=sensor_tag)
+                    amplifier.add_sensor(new_sensor)
+                    self.text.delete('1.0', tk.END)  
+                    self.text.insert(tk.END, f"\nSensor '{sensor_tag}' added to amplifier {amplifier.serial_number}.\n")
 
         self.lb_opt.bind('<Double-1>', selection)
 
